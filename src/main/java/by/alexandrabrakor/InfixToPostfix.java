@@ -7,9 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InfixToPostfix {
-    private static StringBuilder mathPostfix = new StringBuilder();
-    private static List<String> operators = new LinkedList<>();
-    private static Stack<String> operatordStack = new Stack<>();
+    private static final StringBuilder mathPostfix = new StringBuilder();
+    private static final List<String> operators = new LinkedList<>();
+    private static final Stack<String> operatordStack = new Stack<>(); // временно б. хранить отложенные операторы
 
     static {
         operators.add("*");
@@ -20,23 +20,23 @@ public class InfixToPostfix {
         operators.add("=");
     }
 
-    public static String convert(String mathInfix){
+    public static String convert(String mathInfix) {
         operators.clear();
-        mathPostfix.setLength(0); // очистка
-return "";
+        mathPostfix.setLength(0); // служит как очистка
+        return "";
     }
 
     //получаем экземл. для сравнения регулярных выражений
-    private static Matcher getMatcherMath(String mathInfix){
+    private static Matcher getMatcherMath(String mathInfix) {
         //сгененрирует паттерн из строки с регуляр. выраж
-        Pattern patternMath =Pattern.compile(getPatternStrings());
-        //паттерн возврасчает матчер, который будет работать с той строкой,которую  передаем - инфиксное выражение
+        Pattern patternMath = Pattern.compile(getPatternStrings());
+        //паттерн возвращает матчер, который будет работать с той строкой,которую  передаем - инфиксное выражение
         return patternMath.matcher(mathInfix);
 
     }
 
     private static String getPatternStrings() {
-        return getPatternStringNumbers() + "|" + getPatternStringOperators() +"|" + getPatternStringBrackets();
+        return getPatternStringNumbers() + "|" + getPatternStringOperators() + "|" + getPatternStringBrackets();
 
     }
 
@@ -52,7 +52,7 @@ return "";
             sb.append("\\").append(operator);
 
         }
-        return  sb.append("])").toString();
+        return sb.append("])").toString();
     }
 
 
@@ -60,13 +60,13 @@ return "";
     private static String getPatternStringNumbers() {
 //        \d    любая  цифра
 //         +    любое количеств
-//        (  )  еще может что-то быт
+//        (  )  еще может что-то быть
 //        ()?   но может и не быть
 //        \.    может быть точка
 //         \d   цифры после точки
 //         +    любое количество
         // т.е. берем числа с плавающей точкой тоже
-        return  "(\\d+((\\.\\d+)?)+)";
+        return "(\\d+((\\.\\d+)?)+)";
     }
 
 
