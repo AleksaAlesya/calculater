@@ -19,6 +19,8 @@ public  class InfixToPostfix {
         operators.add("^");
     }
 
+
+
     public static String convert(String mathInfix) {
         operatorsStack.clear();
         mathPostfix.setLength(0); // служит как очистка

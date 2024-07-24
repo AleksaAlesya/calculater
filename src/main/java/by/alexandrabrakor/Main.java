@@ -11,18 +11,6 @@ import java.nio.file.StandardOpenOption;
 public class Main {
     public static void main(String[] args) {
 
-//        File file = new File("D:/java_code/calculaterGit/src/calculation.txt");
-//        String path = file.getAbsolutePath();
-//        System.out.println(file.getName());
-//        System.out.println(path);
-//        try {
-//            FileInputStream fis = new FileInputStream(file);
-//            System.out.println(fis);
-//
-//
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
         try {
             Path pathFile =Path.of("src/calculation.txt");
 
@@ -35,6 +23,20 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+//
+//        File file = new File("src/calculation.txt");
+//        String path = file.getAbsolutePath();
+//        System.out.println(file.getName());
+//        System.out.println(path);
+//        try {
+//            FileInputStream fis = new FileInputStream(file);
+//            System.out.println(fis);
+//
+//
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 }
