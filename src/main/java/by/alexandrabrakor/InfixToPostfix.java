@@ -19,6 +19,9 @@ public  class InfixToPostfix {
     }
 
 
+
+
+
 /* Берем строку с инфиксной записью выражения и переводим в постфиксную запись
      f_27*6/(4+1) -  инфиксная запись
      27 6 * 4 1 + / - постфиксная запись
@@ -89,7 +92,10 @@ public  class InfixToPostfix {
 
     //в строке должно остаться, только, то что указано в рег.выр., остальное не попадает
     private static String getPatternStrings() {
-        return getPatternStringNumbers() + "|" + getPatternStringOperators() + "|" + getPatternStringBrackets();
+        return
+                getPatternStringNumbers() + "|" +
+                getPatternStringOperators() + "|" +
+                getPatternStringBrackets();
 
     }
 
@@ -121,8 +127,38 @@ public  class InfixToPostfix {
         return "(\\d+((\\.\\d+)?)+)";
     }
 
+
+    //Регулярное выражение c префиксом
+//    1 - двоичная
+//    7 - восьмеричная
+//    9 - десятеричная
+//    f - шестнадцатеричная)
+    // "^([1-9a-f])_(.*)$"
+
+    private static String getPatternStringPrefix() {
+        return "(^[179f]_)";
+    }
+
+    private static int getBaseFromNumeralSystem(String numeralSystem) {
+        switch (numeralSystem) {
+            case "1":
+                return 2;
+            case "7":
+                return 8;
+            case "9":
+                return 10;
+            case "f":
+                return 16;
+            default:
+                throw new IllegalArgumentException("Неподдерживаемая система счисления");
+        }
+    }
+
+
 //    //Для проверки
 //    public static void main(String[] args) {
+//        System.out.println(getPatternStringPrefix());
+//
 //        System.out.println(getPatternStringOperators());
 //        System.out.println(getPatternStringBrackets());
 //        System.out.println(getPatternStringNumbers());
