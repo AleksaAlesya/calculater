@@ -18,10 +18,6 @@ public  class InfixToPostfix {
         operators.add("^");
     }
 
-
-
-
-
 /* Берем строку с инфиксной записью выражения и переводим в постфиксную запись
      f_27*6/(4+1) -  инфиксная запись
      27 6 * 4 1 + / - постфиксная запись
@@ -38,6 +34,7 @@ public  class InfixToPostfix {
         mathPostfix.setLength(0); // служит как очистка
 
         Matcher matcher = getMatcher(mathInfix);
+        //идем по строке и находим куски соответствующие частям РВ
         while (matcher.find()){
             String mathElement =matcher.group();
             if (isNumeric(mathElement)){
@@ -46,6 +43,9 @@ public  class InfixToPostfix {
             }else if (mathElement.equals("(")){
                 operatorsStack.add(mathElement);
             }else if(mathElement.equals(")")){
+                //peek - верхнее значение в стеке
+                //pop -извлечь из стека
+                //push- добавить в верхнее значение в стек
                 while (!operatorsStack.peek().equals("(")){
                     mathPostfix.append(operatorsStack.pop()).append(" ");
                 }
@@ -76,7 +76,7 @@ public  class InfixToPostfix {
     public static boolean isNumeric(String mathElement){
         // формирует паттерсн с которым будем сравнивать строку
         Pattern patternNum = Pattern.compile(getPatternStringNumbers());
-        //find - сравнит, тру - если есть такая часть во всей строке
+        //find -  тру - если есть такая часть во всем РВ
         return  patternNum.matcher(mathElement).find();
 
     }
