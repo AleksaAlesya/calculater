@@ -154,6 +154,8 @@ public  class InfixToPostfix {
 
     }
 
+
+
     private static int getBaseFromNumeralSystem(String numeralSystem) {
         switch (numeralSystem) {
             case "1":
