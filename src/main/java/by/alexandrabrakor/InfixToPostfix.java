@@ -37,6 +37,8 @@ public  class InfixToPostfix {
         //идем по строке и находим куски соответствующие частям РВ
         while (matcher.find()){
             String mathElement =matcher.group();
+
+
             if (isNumeric(mathElement)){
                 mathPostfix.append(mathElement).append(" ");
 
@@ -73,13 +75,6 @@ public  class InfixToPostfix {
         };
     }
 
-    public static boolean isNumeric(String mathElement){
-        // формирует паттерсн с которым будем сравнивать строку
-        Pattern patternNum = Pattern.compile(getPatternStringNumbers());
-        //find -  тру - если есть такая часть во всем РВ
-        return  patternNum.matcher(mathElement).find();
-
-    }
 
     //получаем экземл. для сравнения регулярных выражений
     private static Matcher getMatcher(String mathInfix) {
@@ -89,6 +84,16 @@ public  class InfixToPostfix {
         return patternMath.matcher(mathInfix);
 
     }
+
+    public static boolean isNumeric(String mathElement){
+        // формирует паттерсн с которым будем сравнивать строку
+        Pattern patternNum = Pattern.compile(getPatternStringNumbers());
+        //find -  тру - если есть такая часть во всем РВ
+        return  patternNum.matcher(mathElement).find();
+
+    }
+
+
 
     //в строке должно остаться, только, то что указано в рег.выр., остальное не попадает
     private static String getPatternStrings() {
@@ -127,7 +132,7 @@ public  class InfixToPostfix {
         return "(\\d+((\\.\\d+)?)+)";
     }
 
-
+    //todo сделать проверку системы счисления, перевести в десятичную
     //Регулярное выражение c префиксом
 //    1 - двоичная
 //    7 - восьмеричная
@@ -137,6 +142,16 @@ public  class InfixToPostfix {
 
     private static String getPatternStringPrefix() {
         return "(^[179f]_)";
+    }
+
+
+
+    public static boolean checkNumeralSystem(String mathElement){
+        // формирует паттерсн с которым будем сравнивать строку
+        Pattern patternNum = Pattern.compile(getPatternStringPrefix());
+        //find -  тру - если есть такая часть во всем РВ
+        return  patternNum.matcher(mathElement).find();
+
     }
 
     private static int getBaseFromNumeralSystem(String numeralSystem) {
@@ -155,17 +170,20 @@ public  class InfixToPostfix {
     }
 
 
-//    //Для проверки
-//    public static void main(String[] args) {
-//        System.out.println(getPatternStringPrefix());
-//
-//        System.out.println(getPatternStringOperators());
-//        System.out.println(getPatternStringBrackets());
-//        System.out.println(getPatternStringNumbers());
-//        System.out.println(getPatternStrings());
-//        System.out.println(convert("f_27*6/(4+1)"));
-//        System.out.println(convert("5+3"));
-//        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
-//    }
+    //Для проверки
+    public static void main(String[] args) {
+        System.out.println(checkNumeralSystem("f_27*6/(4+1)")); // true
+        System.out.println(checkNumeralSystem("10_27*6/(4+1)")); //false
+        System.out.println(checkNumeralSystem("7_27*6/(4+1)")); //true
+        System.out.println(getPatternStringPrefix());
+
+        System.out.println(getPatternStringOperators());
+        System.out.println(getPatternStringBrackets());
+        System.out.println(getPatternStringNumbers());
+        System.out.println(getPatternStrings());
+        System.out.println(convert("f_27*6/(4+1)"));
+        System.out.println(convert("5+3"));
+        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
+    }
 
 }
