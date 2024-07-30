@@ -9,6 +9,7 @@ public class InfixToPostfix {
     private static final StringBuilder mathPostfix = new StringBuilder();
     private static final LinkedList<String> operators = new LinkedList<>();//храним все существующие операторы
     private static final Stack<String> operatorsStack = new Stack<>();// временно б. хранить отложенные операторы
+//    public  static  int numberSystem;
 
     static {
         operators.add("*");
@@ -22,7 +23,7 @@ public class InfixToPostfix {
      f_27*6/(4+1) -  инфиксная запись
      27 6 * 4 1 + / - постфиксная запись
 * последоватеельно каждый элемент сравниваем с Рег. Выр, пока нахоодим подходящий кусок, продолжаем
-* Ести это число, то мы добавляем его сразу в стринбилдер, в котором формируем  постфиксоное выражение и пробел
+* Ести это число, то мы  конвертируем его в 10ричную систему счисления и добавляем его сразу в стринбилдер, в котором формируем  постфиксоное выражение и пробел
 * Если это  открыв. скобка ( - то мы ее добаляем в Стэк ( для временнного хранения операторов
 * Если это закрывающаяся скобка ), то мы берем все операторы из стэка до открыв. скобки ( записываем в стрингбилдер постф.  и удаляем  из стэка, скобку ( - удаляем
 * Если пришло, что то др. , т.е. операторы, и если в стеке пусто - то записываем с Стэк. Если не пусто, то достаем последний оператор и проверям их приоритеты, если у имеющегося выше приоритет, то его добавляем в стрингбилдер и удаляем из стэка, а этот записываем в стэк. Если же ниже, то этот добавляем в стэк
@@ -38,30 +39,33 @@ public class InfixToPostfix {
         while (matcher.find()) {
             String mathElement = matcher.group();
 
-            if (isNumeric(mathElement)) {
+                if (isNumeric(mathElement)) {
+                    mathElement = ConverterNumeralSystem.convertForNumeralSystem(mathInfix,mathElement);
+                    mathPostfix.append(mathElement).append(" ");
 
+                } else if (mathElement.equals("(")) {
+                    operatorsStack.add(mathElement);
 
-                mathPostfix.append(mathElement).append(" ");
+                } else if (mathElement.equals(")")) {
+                    //peek - верхнее значение в стеке
+                    //pop -извлечь из стека
+                    //push- добавить в верхнее значение в стек
+                    while (!operatorsStack.peek().equals("(")) {
+                        mathPostfix.append(operatorsStack.pop()).append(" ");
+                    }
+                    operatorsStack.pop();
 
-            } else if (mathElement.equals("(")) {
-                operatorsStack.add(mathElement);
-            } else if (mathElement.equals(")")) {
-                //peek - верхнее значение в стеке
-                //pop -извлечь из стека
-                //push- добавить в верхнее значение в стек
-                while (!operatorsStack.peek().equals("(")) {
-                    mathPostfix.append(operatorsStack.pop()).append(" ");
+                } else {
+                    while (!operatorsStack.isEmpty() && getOperatorPriority(operatorsStack.peek()) >= getOperatorPriority(mathElement)) {
+                        mathPostfix.append(operatorsStack.pop()).append(" ");
+                    }
+                    operatorsStack.push(mathElement);
+
                 }
-                operatorsStack.pop();
-            } else {
-                while (!operatorsStack.isEmpty() && getOperatorPriority(operatorsStack.peek()) >= getOperatorPriority(mathElement)) {
-                    mathPostfix.append(operatorsStack.pop()).append(" ");
-                }
-                operatorsStack.push(mathElement);
             }
-        }
-        while (!operatorsStack.isEmpty()) {
-            mathPostfix.append(operatorsStack.pop()).append(" ");
+            while (!operatorsStack.isEmpty()) {
+                mathPostfix.append(operatorsStack.pop()).append(" ");
+//            }
         }
         return mathPostfix.toString();
     }
@@ -98,12 +102,11 @@ public class InfixToPostfix {
     //в строке должно остаться, только, то что указано в рег.выр., остальное не попадает
     private static String getPatternStrings() {
         return
-
-                getPatternStringNumbers() + "|" +
+                        getPatternStringNumbers() + "|" +
                         getPatternStringOperators() + "|" +
                         getPatternStringBrackets();
-
     }
+
 
     //Регулярное выражение со скобками
     private static String getPatternStringBrackets() {
@@ -129,84 +132,17 @@ public class InfixToPostfix {
          \.    может быть точка
          \d   цифры после точки
           +    любое количество*/
-//    [-+]?[0-9A-Z]+([.,][0-9A-Z]+)?  для разных систем счисления
+//    [-]?[0-9A-Z]+([.,][0-9A-Z]+)?  для разных систем счисления
 
     private static String getPatternStringNumbers() {
 //        return "(\\d+((\\.\\d+)?)+)"; // только для десятичной системы
-        return  "([0-9A-Z]+([.,][0-9A-Z]+)?)";
-    }
-
-    //todo сделать проверку системы счисления, перевести в десятичную
-    //Регулярное выражение c префиксом
-//    1 - двоичная
-//    7 - восьмеричная
-//    9 - десятеричная
-//    f - шестнадцатеричная)
-    // "^([1-9a-f])_(.*)$"
-
-    private static String getPatternStringPrefix() {
-        return "(^[179f]_)";
+        return "([-]?[0-9A-Z]+([.,][0-9A-Z]+)?)";
     }
 
 
-    public static boolean checkNumeralSystem(String mathElement) {
-        // формирует паттерсн с которым будем сравнивать строку
-        Pattern patternNum = Pattern.compile(getPatternStringPrefix());
-        //find -  тру - если есть такая часть во всем РВ
-        return patternNum.matcher(mathElement).find();
-
-    }
-
-    private static String convertForNumeralSystem(int numeralSystem, String mathElement) {
-        String convert;
-
-        switch (numeralSystem) {
-            case 2:
-                convert= String.valueOf(Long.parseLong(mathElement,numeralSystem));
-                System.out.println("Конвертировали из двоичной системы в десятеричную: " + convert);
-//                convert = Long.toBinaryString(Long.parseLong(mathElement)); //обратный перевод в двоичную систему
-//                System.out.println("Двоичная система: " + convert);
-                return convert;
-            case 8:
-                convert= String.valueOf(Long.parseLong(mathElement,numeralSystem));
-                System.out.println("Конвертировали из восьмеричной системы в десятеричную: " + convert);
-//                convert = Long.toOctalString(Long.parseLong(mathElement));
-//                System.out.println("Воcьмеричная система: " + convert);
-                return convert;
-            case 16:
-                convert= String.valueOf(Long.parseLong(mathElement,numeralSystem));
-                System.out.println("Конвертировали из шестнадцатиричной системы в десятеричную: " + convert);
-//                convert = Long.toHexString(Long.parseLong(mathElement)).toUpperCase();
-//                System.out.println("Шестнадцатеричная система: " + convert);
-                return convert;
-
-            default: return mathElement;
-        }
-
-    }
-
-    private static int getBaseFromNumeralSystem(String numeralSystem) {
-        switch (numeralSystem) {
-            case "1":
-                return 2;
-            case "7":
-                return 8;
-            case "9":
-                return 10;
-            case "f":
-                return 16;
-            default:
-                throw new IllegalArgumentException("Неподдерживаемая система счисления");
-        }
-    }
-
-
-    //Для проверки
-    public static void main(String[] args) {
-//        System.out.println(checkNumeralSystem("f_27*6/(4+1)")); // true
-//        System.out.println(checkNumeralSystem("10_27*6/(4+1)")); //false
-//        System.out.println(checkNumeralSystem("7_27*6/(4+1)")); //true
-//        System.out.println(getPatternStringPrefix());
+//
+//    //Для проверки
+//    public static void main(String[] args) {
 //
 //        System.out.println(getPatternStringOperators());
 //        System.out.println(getPatternStringBrackets());
@@ -215,12 +151,8 @@ public class InfixToPostfix {
 //        System.out.println(convert("f_27*6/(4+1)"));
 //        System.out.println(convert("5+3"));
 //        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
-
-        System.out.println( convertForNumeralSystem(10,"27"));
-
-   convertForNumeralSystem(2,"100"); //4
-   convertForNumeralSystem(8,"11"); //9
-   convertForNumeralSystem(16,"A"); //10
-    }
+//
+//
+//    }
 
 }
