@@ -5,7 +5,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public  class InfixToPostfix {
+public class InfixToPostfix {
     private static final StringBuilder mathPostfix = new StringBuilder();
     private static final LinkedList<String> operators = new LinkedList<>();//храним все существующие операторы
     private static final Stack<String> operatorsStack = new Stack<>();// временно б. хранить отложенные операторы
@@ -35,41 +35,42 @@ public  class InfixToPostfix {
 
         Matcher matcher = getMatcher(mathInfix);
         //идем по строке и находим куски соответствующие частям РВ
-        while (matcher.find()){
-            String mathElement =matcher.group();
+        while (matcher.find()) {
+            String mathElement = matcher.group();
+
+            if (isNumeric(mathElement)) {
 
 
-            if (isNumeric(mathElement)){
                 mathPostfix.append(mathElement).append(" ");
 
-            }else if (mathElement.equals("(")){
+            } else if (mathElement.equals("(")) {
                 operatorsStack.add(mathElement);
-            }else if(mathElement.equals(")")){
+            } else if (mathElement.equals(")")) {
                 //peek - верхнее значение в стеке
                 //pop -извлечь из стека
                 //push- добавить в верхнее значение в стек
-                while (!operatorsStack.peek().equals("(")){
+                while (!operatorsStack.peek().equals("(")) {
                     mathPostfix.append(operatorsStack.pop()).append(" ");
                 }
                 operatorsStack.pop();
-            }else {
-                while (!operatorsStack.isEmpty() && getOperatorPriority(operatorsStack.peek())>= getOperatorPriority(mathElement)){
+            } else {
+                while (!operatorsStack.isEmpty() && getOperatorPriority(operatorsStack.peek()) >= getOperatorPriority(mathElement)) {
                     mathPostfix.append(operatorsStack.pop()).append(" ");
                 }
                 operatorsStack.push(mathElement);
             }
         }
-        while (!operatorsStack.isEmpty()){
+        while (!operatorsStack.isEmpty()) {
             mathPostfix.append(operatorsStack.pop()).append(" ");
         }
         return mathPostfix.toString();
     }
 
-    private static int getOperatorPriority(String operator){
-        return switch (operator){
-            case "^"->3;
-            case "*", "/"->2;
-            case "+","-"->1;
+    private static int getOperatorPriority(String operator) {
+        return switch (operator) {
+            case "^" -> 3;
+            case "*", "/" -> 2;
+            case "+", "-" -> 1;
             default -> 0;
 
         };
@@ -85,22 +86,22 @@ public  class InfixToPostfix {
 
     }
 
-    public static boolean isNumeric(String mathElement){
+    public static boolean isNumeric(String mathElement) {
         // формирует паттерсн с которым будем сравнивать строку
         Pattern patternNum = Pattern.compile(getPatternStringNumbers());
         //find -  тру - если есть такая часть во всем РВ
-        return  patternNum.matcher(mathElement).find();
+        return patternNum.matcher(mathElement).find();
 
     }
-
 
 
     //в строке должно остаться, только, то что указано в рег.выр., остальное не попадает
     private static String getPatternStrings() {
         return
+
                 getPatternStringNumbers() + "|" +
-                getPatternStringOperators() + "|" +
-                getPatternStringBrackets();
+                        getPatternStringOperators() + "|" +
+                        getPatternStringBrackets();
 
     }
 
@@ -114,9 +115,9 @@ public  class InfixToPostfix {
     private static String getPatternStringOperators() {
         StringBuilder sb = new StringBuilder("([");
         for (String operator : operators) {
-           sb.append("\\").append(operator);
+            sb.append("\\").append(operator);
         }
-       return sb.append("])").toString();
+        return sb.append("])").toString();
     }
 
     /*Регулярное выражение с цифрами
@@ -128,8 +129,11 @@ public  class InfixToPostfix {
          \.    может быть точка
          \d   цифры после точки
           +    любое количество*/
+//    [-+]?[0-9A-Z]+([.,][0-9A-Z]+)?  для разных систем счисления
+
     private static String getPatternStringNumbers() {
-        return "(\\d+((\\.\\d+)?)+)";
+//        return "(\\d+((\\.\\d+)?)+)"; // только для десятичной системы
+        return  "([0-9A-Z]+([.,][0-9A-Z]+)?)";
     }
 
     //todo сделать проверку системы счисления, перевести в десятичную
@@ -145,16 +149,41 @@ public  class InfixToPostfix {
     }
 
 
-
-    public static boolean checkNumeralSystem(String mathElement){
+    public static boolean checkNumeralSystem(String mathElement) {
         // формирует паттерсн с которым будем сравнивать строку
         Pattern patternNum = Pattern.compile(getPatternStringPrefix());
         //find -  тру - если есть такая часть во всем РВ
-        return  patternNum.matcher(mathElement).find();
+        return patternNum.matcher(mathElement).find();
 
     }
 
+    private static String convertForNumeralSystem(int numeralSystem, String mathElement) {
+        String convert;
 
+        switch (numeralSystem) {
+            case 2:
+                convert= String.valueOf(Long.parseLong(mathElement,numeralSystem));
+                System.out.println("Конвертировали из двоичной системы в десятеричную: " + convert);
+//                convert = Long.toBinaryString(Long.parseLong(mathElement)); //обратный перевод в двоичную систему
+//                System.out.println("Двоичная система: " + convert);
+                return convert;
+            case 8:
+                convert= String.valueOf(Long.parseLong(mathElement,numeralSystem));
+                System.out.println("Конвертировали из восьмеричной системы в десятеричную: " + convert);
+//                convert = Long.toOctalString(Long.parseLong(mathElement));
+//                System.out.println("Воcьмеричная система: " + convert);
+                return convert;
+            case 16:
+                convert= String.valueOf(Long.parseLong(mathElement,numeralSystem));
+                System.out.println("Конвертировали из шестнадцатиричной системы в десятеричную: " + convert);
+//                convert = Long.toHexString(Long.parseLong(mathElement)).toUpperCase();
+//                System.out.println("Шестнадцатеричная система: " + convert);
+                return convert;
+
+            default: return mathElement;
+        }
+
+    }
 
     private static int getBaseFromNumeralSystem(String numeralSystem) {
         switch (numeralSystem) {
@@ -174,18 +203,24 @@ public  class InfixToPostfix {
 
     //Для проверки
     public static void main(String[] args) {
-        System.out.println(checkNumeralSystem("f_27*6/(4+1)")); // true
-        System.out.println(checkNumeralSystem("10_27*6/(4+1)")); //false
-        System.out.println(checkNumeralSystem("7_27*6/(4+1)")); //true
-        System.out.println(getPatternStringPrefix());
+//        System.out.println(checkNumeralSystem("f_27*6/(4+1)")); // true
+//        System.out.println(checkNumeralSystem("10_27*6/(4+1)")); //false
+//        System.out.println(checkNumeralSystem("7_27*6/(4+1)")); //true
+//        System.out.println(getPatternStringPrefix());
+//
+//        System.out.println(getPatternStringOperators());
+//        System.out.println(getPatternStringBrackets());
+//        System.out.println(getPatternStringNumbers());
+//        System.out.println(getPatternStrings());
+//        System.out.println(convert("f_27*6/(4+1)"));
+//        System.out.println(convert("5+3"));
+//        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
 
-        System.out.println(getPatternStringOperators());
-        System.out.println(getPatternStringBrackets());
-        System.out.println(getPatternStringNumbers());
-        System.out.println(getPatternStrings());
-        System.out.println(convert("f_27*6/(4+1)"));
-        System.out.println(convert("5+3"));
-        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
+        System.out.println( convertForNumeralSystem(10,"27"));
+
+   convertForNumeralSystem(2,"100"); //4
+   convertForNumeralSystem(8,"11"); //9
+   convertForNumeralSystem(16,"A"); //10
     }
 
 }
