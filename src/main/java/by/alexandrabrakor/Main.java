@@ -12,16 +12,17 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            Path pathFile =Path.of("src/calculation.txt");
+            Path pathFile =Path.of("src/calculation.txt"); //todo вынести в файл конфиг
 
             String stringMathOut = Files.readString(pathFile);
-            String resultIn =MathParse.calculation(stringMathOut).toString();
+            String mathPostfix = InfixToPostfix.convert(stringMathOut);
+            String resultIn =MathParse.calculation(mathPostfix).toString();
             Files.writeString(pathFile,   "=" + resultIn, StandardOpenOption.APPEND);
 
             System.out.println(stringMathOut);
             System.out.println(InfixToPostfix.convert(stringMathOut) + " = " + resultIn);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           e.printStackTrace();
         }
 
 //

@@ -18,7 +18,7 @@ public class InfixToPostfix {
         operators.add("+");
         operators.add("^");
     }
-
+// Алгоритм Дейкстры
 /* Берем строку с инфиксной записью выражения и переводим в постфиксную запись
      f_27*6/(4+1) -  инфиксная запись
      27 6 * 4 1 + / - постфиксная запись
@@ -140,10 +140,9 @@ public class InfixToPostfix {
     }
 
 
-//
+
 //    //Для проверки
 //    public static void main(String[] args) {
-//
 //        System.out.println(getPatternStringOperators());
 //        System.out.println(getPatternStringBrackets());
 //        System.out.println(getPatternStringNumbers());
@@ -151,8 +150,7 @@ public class InfixToPostfix {
 //        System.out.println(convert("f_27*6/(4+1)"));
 //        System.out.println(convert("5+3"));
 //        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
-//
-//
+
 //    }
 
 }

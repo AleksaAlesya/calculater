@@ -15,9 +15,9 @@ public class MathParse {
      *  делаем операцию с этими числами и оператором и записываем в стэк
      *  и так проходимся до конца всех элементов в стэке, в итоге будет одно число - оно и есть результат
      * удаляем из стэка и возвращаем это число*/
-    public static  Double calculation (String mathInfix){
-        mathPostfix = InfixToPostfix.convert(mathInfix);
-        String [] mathArr =mathPostfix.split("\s+");
+    public static  Double calculation (String mathPostfix){
+//        mathPostfix = InfixToPostfix.convert(mathInfix); //todo  перенести в класс маин
+        String [] mathArr =mathPostfix.split("\\s+");
         for (String mathElem : mathArr) {
             if (InfixToPostfix.isNumeric(mathElem)){
                 numbers.push(Double.parseDouble(mathElem));
