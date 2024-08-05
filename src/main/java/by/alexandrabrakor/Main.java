@@ -15,8 +15,8 @@ public class Main {
             Path pathFile =Path.of("src/calculation.txt"); //todo вынести в файл конфиг
 
             String stringMathOut = Files.readString(pathFile);
-            String mathPostfix = InfixToPostfix.convert(stringMathOut);
-            String resultIn =MathParse.calculation(mathPostfix).toString();
+//            String mathPostfix = InfixToPostfix.convert(stringMathOut); // todo
+            String resultIn =MathParse.calculation(stringMathOut).toString();
             Files.writeString(pathFile,   "=" + resultIn, StandardOpenOption.APPEND);
 
             System.out.println(stringMathOut);

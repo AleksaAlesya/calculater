@@ -50,7 +50,7 @@ public class ConverterNumeralSystem {
         return numberSystem;
     }
 
-    //todo
+
     private static Matcher getMatcherForNumeralSystem(String mathInfix){
         //сгененрирует паттерн из строки с регуляр. выраж
         Pattern patternMath = Pattern.compile( getPatternStringPrefix());

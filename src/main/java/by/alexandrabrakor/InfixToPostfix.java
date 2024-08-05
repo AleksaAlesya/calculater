@@ -36,35 +36,38 @@ public class InfixToPostfix {
 
         Matcher matcher = getMatcher(mathInfix);
         //идем по строке и находим куски соответствующие частям РВ
+
         while (matcher.find()) {
+
             String mathElement = matcher.group();
 
-                if (isNumeric(mathElement)) {
-                    mathElement = ConverterNumeralSystem.convertForNumeralSystem(mathInfix,mathElement);
-                    mathPostfix.append(mathElement).append(" ");
 
-                } else if (mathElement.equals("(")) {
-                    operatorsStack.add(mathElement);
+            if (isNumeric(mathElement)) {
+                mathElement = ConverterNumeralSystem.convertForNumeralSystem(mathInfix, mathElement);
+                mathPostfix.append(mathElement).append(" ");
 
-                } else if (mathElement.equals(")")) {
-                    //peek - верхнее значение в стеке
-                    //pop -извлечь из стека
-                    //push- добавить в верхнее значение в стек
-                    while (!operatorsStack.peek().equals("(")) {
-                        mathPostfix.append(operatorsStack.pop()).append(" ");
-                    }
-                    operatorsStack.pop();
+            } else if (mathElement.equals("(")) {
+                operatorsStack.add(mathElement);
 
-                } else {
-                    while (!operatorsStack.isEmpty() && getOperatorPriority(operatorsStack.peek()) >= getOperatorPriority(mathElement)) {
-                        mathPostfix.append(operatorsStack.pop()).append(" ");
-                    }
-                    operatorsStack.push(mathElement);
-
+            } else if (mathElement.equals(")")) {
+                //peek - верхнее значение в стеке
+                //pop -извлечь из стека
+                //push- добавить в верхнее значение в стек
+                while (!operatorsStack.peek().equals("(")) {
+                    mathPostfix.append(operatorsStack.pop()).append(" ");
                 }
+                operatorsStack.pop();
+
+            } else {
+                while (!operatorsStack.isEmpty() && getOperatorPriority(operatorsStack.peek()) >= getOperatorPriority(mathElement)) {
+                    mathPostfix.append(operatorsStack.pop()).append(" ");
+                }
+                operatorsStack.push(mathElement);
+
             }
-            while (!operatorsStack.isEmpty()) {
-                mathPostfix.append(operatorsStack.pop()).append(" ");
+        }
+        while (!operatorsStack.isEmpty()) {
+            mathPostfix.append(operatorsStack.pop()).append(" ");
 //            }
         }
         return mathPostfix.toString();
@@ -80,7 +83,6 @@ public class InfixToPostfix {
         };
     }
 
-
     //получаем экземл. для сравнения регулярных выражений
     private static Matcher getMatcher(String mathInfix) {
         //сгененрирует паттерн из строки с регуляр. выраж
@@ -91,11 +93,10 @@ public class InfixToPostfix {
     }
 
     public static boolean isNumeric(String mathElement) {
-        // формирует паттерсн с которым будем сравнивать строку
+        // формирует паттерн с которым будем сравнивать строку
         Pattern patternNum = Pattern.compile(getPatternStringNumbers());
         //find -  тру - если есть такая часть во всем РВ
         return patternNum.matcher(mathElement).find();
-
     }
 
 
@@ -132,25 +133,27 @@ public class InfixToPostfix {
          \.    может быть точка
          \d   цифры после точки
           +    любое количество*/
-//    [-]?[0-9A-Z]+([.,][0-9A-Z]+)?  для разных систем счисления
+//    [-]?[0-9A-F]+([.,][0-9A-F]+)?  для разных систем счисления
+    //        (-)?[0-9A-F]+\.[0-9A-F]+
 
     private static String getPatternStringNumbers() {
 //        return "(\\d+((\\.\\d+)?)+)"; // только для десятичной системы
-        return "([-]?[0-9A-Z]+([.,][0-9A-Z]+)?)";
+        return "([-]?[0-9A-F]+([.,][0-9A-F]+)?)";
     }
 
 
-
-//    //Для проверки
-//    public static void main(String[] args) {
+    //Для проверки
+    public static void main(String[] args) {
 //        System.out.println(getPatternStringOperators());
 //        System.out.println(getPatternStringBrackets());
 //        System.out.println(getPatternStringNumbers());
 //        System.out.println(getPatternStrings());
-//        System.out.println(convert("f_27*6/(4+1)"));
-//        System.out.println(convert("5+3"));
+//        System.out.println(convert("7_12*5/(4+1)"));
+//        System.out.println(convert("f_5+3"));
 //        System.out.println(convert("5+5*45-(7-17)*8+6*9"));
+        String s = "1 10 5 * 4 1 + /";
+        System.out.println(s=="1 10 5 * 4 1 + / ");
 
-//    }
+    }
 
 }

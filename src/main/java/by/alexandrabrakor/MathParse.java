@@ -8,15 +8,15 @@ public class MathParse {
 
 
     /* В методе делаем калькулирование выражения и находим результат
-     * cтроку с выражением конвертируем в постфиксную запись
+     * cтроку с выражением конвертируем в постфиксную запись// в маине
      *  сплитуем по пробелам
      *  пробегаем по массиву,если число, то записываем в стэк
      * когда доходим до оператора, в стеке полюбому уже есть 2 числа, мы извлекаем их
      *  делаем операцию с этими числами и оператором и записываем в стэк
      *  и так проходимся до конца всех элементов в стэке, в итоге будет одно число - оно и есть результат
      * удаляем из стэка и возвращаем это число*/
-    public static  Double calculation (String mathPostfix){
-//        mathPostfix = InfixToPostfix.convert(mathInfix); //todo  перенести в класс маин
+    public static  Double calculation (String mathInfix){
+        mathPostfix = InfixToPostfix.convert(mathInfix); // todo перенести в класс маин
         String [] mathArr =mathPostfix.split("\\s+");
         for (String mathElem : mathArr) {
             if (InfixToPostfix.isNumeric(mathElem)){
