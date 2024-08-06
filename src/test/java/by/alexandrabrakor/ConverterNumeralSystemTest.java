@@ -45,4 +45,31 @@ class ConverterNumeralSystemTest {
         Assertions.assertEquals("10",convertForNumeralSystem(mathInfix,mathElement));
 
     }
+
+    @DisplayName("Тест конвертации из инфиксной в постфиксную запись для десятеричной  системы счисления ")
+    @Test
+    void convertForNumeralSystemFor10NSTest() {
+        String mathInfix = "9_10*5/(4+1)";
+        String mathElement = "10";
+        Assertions.assertEquals("10",convertForNumeralSystem(mathInfix,mathElement));
+
+    }
+
+    @DisplayName("Тест конвертации из инфиксной в постфиксную запись для шестнадцатиричной системы счисления ")
+    @Test
+    void convertForNumeralSystemFor16NSTest() {
+        String mathInfix = "f_A*-5/(4+1)=10.0";
+        String mathElement = "A";
+        Assertions.assertEquals("10",convertForNumeralSystem(mathInfix,mathElement));
+
+    }
+
+    @DisplayName("Тест на не равен ... для шестнадцатиричной системы счисления ")
+    @Test
+    void convertForNumeralSystemTest() {
+        String mathInfix = "f_A*-5/(4+1)=10.0";
+        String mathElement = "A";
+        Assertions.assertNotEquals("A",convertForNumeralSystem(mathInfix,mathElement));
+
+    }
 }
